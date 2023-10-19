@@ -59,9 +59,11 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/vn.png
+    - assets/N.png
+    - assets/LogoPreto.png
     - assets/recuperar.png
     - assets/check.png
+    - assets/LogoBranco.png
     
 
   # To add assets to your application, add an assets section, like this:

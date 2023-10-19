@@ -10,7 +10,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool queroEntrar = true;
-  final _formkey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,10 +22,11 @@ class _LoginPageState extends State<LoginPage> {
         ),
         color: const Color.fromARGB(255, 36, 36, 36),
         child: ListView(
-          key: _formkey,
           children: <Widget>[
-            SizedBox(
-                width: 50, height: 250, child: Image.asset('assets/vn.png')),
+                SizedBox(
+                width: 50,
+                height: 250,
+                child: Image.asset('assets/LogoBranco.png')),
             const SizedBox(
               height: 60,
             ),
@@ -53,18 +54,6 @@ class _LoginPageState extends State<LoginPage> {
                   fontSize: 20,
                   color: Colors.white,
                 ),
-                validator: (String? value) {
-                  if (value == null) {
-                    return "O e-mail não pode ser vazio";
-                  }
-                  if (value.length < 5) {
-                    return "O e-mail é muito curto";
-                  }
-                  if (!value.contains("@")) {
-                    return "O e-mail não é válido";
-                  }
-                  return null;
-                },
               ),
             ),
             const SizedBox(
@@ -93,10 +82,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 style: const TextStyle(fontSize: 20, color: Colors.white),
-                
               ),
-              
-              
             ),
             const SizedBox(
               height: 30,
@@ -128,16 +114,6 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       style: const TextStyle(fontSize: 20, color: Colors.white),
-                       validator: (String? value) {
-                  if (value == null) {
-                    return "A confirmação de senha não pode ser vazia";
-                  }
-                  if (value.length < 5) {
-                    return "A confirmação de senha é muito curta";
-                  }
-                  
-                  return null;
-                },
                     ),
                     const SizedBox(
                       height: 30,
@@ -158,12 +134,6 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       style: const TextStyle(color: Colors.white),
-                       validator: (String? value) {
-                  if (value == null) {
-                    return "O nome não pode ser vazio";
-                  }
-                   return null;
-                },
                     ),
                   ],
                 ),
@@ -209,7 +179,6 @@ class _LoginPageState extends State<LoginPage> {
 
             InkWell(
               onTap: () {
-                botaoPrincipal();
                 setState(() {
                   queroEntrar = !queroEntrar;
                 });
@@ -274,13 +243,5 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
-  }
-
-  botaoPrincipal() {
-    if (_formkey.currentState!.validate()) {
-      print("form valido");
-    } else {
-      print("Form invalido");
-    }
   }
 }
