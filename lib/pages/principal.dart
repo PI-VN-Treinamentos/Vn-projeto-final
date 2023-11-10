@@ -14,8 +14,6 @@ class principal extends StatelessWidget {
          body: Container(
         padding: const EdgeInsets.only(
           top:200,
-          left:40,
-          right:40,
         ),
          color: const Color.fromARGB(255, 36, 36, 36),
         child: ListView(

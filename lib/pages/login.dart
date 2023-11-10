@@ -271,7 +271,7 @@ class _LoginPageState extends State<LoginPage> {
                         color: Colors.white,
                         decoration: TextDecoration.none,
                         fontFamily: 'Lexend',
-                        fontSize: 23,
+                        fontSize: 24,
                       ),
                     ),
                   ),

@@ -15,7 +15,7 @@ class link extends StatelessWidget {
         padding: const EdgeInsets.only(
           top:200,
           left:40,
-          right:40,
+          right:70,
         ),
          color: const Color.fromARGB(255, 36, 36, 36),
         child: ListView(
