@@ -1,7 +1,10 @@
 // ignore_for_file: sort_child_properties_last
 
 import 'package:flutter/material.dart';
+import 'package:pi/pages/link.dart';
+import 'package:pi/pages/principal.dart';
 import 'package:pi/pages/recuperar.dart';
+//import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
   @override
@@ -9,7 +12,30 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController senhaController = TextEditingController();
+  TextEditingController nomeController = TextEditingController();
+
   bool queroEntrar = true;
+
+  /*Future<void> cadastrarUsuario() async {
+    final response = await http.post(
+      Uri.parse('http://seu-backend.com/cadastrar-usuario/'),
+      body: {
+        'nome': nomeController.text,
+        'email': emailController.text,
+        'senha': senhaController.text,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Usuário cadastrado com sucesso
+      print('Usuário cadastrado com sucesso');
+    } else {
+      // Erro no cadastro
+      print('Erro ao cadastrar usuário');
+    }
+  } */
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
         color: const Color.fromARGB(255, 36, 36, 36),
         child: ListView(
           children: <Widget>[
-                SizedBox(
+            SizedBox(
                 width: 50,
                 height: 250,
                 child: Image.asset('assets/LogoBranco.png')),
@@ -178,10 +204,21 @@ class _LoginPageState extends State<LoginPage> {
             ),
 
             InkWell(
-              onTap: () {
-                setState(() {
-                  queroEntrar = !queroEntrar;
-                });
+              onTap: () async {
+                if (queroEntrar) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => principal()),
+                  );
+                  // Lógica de login
+                } else {
+                  // Lógica de cadastro
+                  //await cadastrarUsuario();
+                  // Alterar para "entrar" após cadastrar
+                  setState(() {
+                    queroEntrar = true;
+                  });
+                }
               },
               child: Container(
                 width: 100,
@@ -217,6 +254,8 @@ class _LoginPageState extends State<LoginPage> {
               child: GestureDetector(
                 child: InkWell(
                   onTap: () {
+                    // Mostrar o texto apenas se queroEntrar for verdadeiro (login)
+
                     setState(() {
                       queroEntrar = !queroEntrar;
                     });
