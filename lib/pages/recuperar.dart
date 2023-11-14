@@ -99,7 +99,8 @@ class Recuperar extends StatelessWidget {
                         MaterialPageRoute(
                           builder: (context) => Link(),
                         ));
-                // Coloque a lógica de navegação para outra página aqui.
+                
+              
               },
               child: Container(
                 width: 10,
@@ -121,7 +122,7 @@ class Recuperar extends StatelessWidget {
                   "Enviar",
                   style: TextStyle(
                     color: Color.fromARGB(255, 0, 0, 0),
-                    fontSize: 25, // Defina o tamanho da fonte como 20
+                    fontSize: 25, 
                     fontFamily: 'Lexend',
                   ),
                   

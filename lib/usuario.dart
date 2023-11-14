@@ -17,6 +17,7 @@ class Usuario {
 
   set email(String email) {
     _email = email;
+    
   }
 
   set senha(String senha) {

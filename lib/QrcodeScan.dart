@@ -16,6 +16,7 @@ class _QRCodeScanState extends State<QRCodeScan> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Scan QR Code'),
+        
       ),
       body: Column(
         children: [

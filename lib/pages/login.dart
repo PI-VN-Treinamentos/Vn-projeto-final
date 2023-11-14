@@ -170,7 +170,7 @@ class _LoginPageState extends State<LoginPage> {
               alignment: Alignment.centerRight,
               child: Visibility(
                 visible:
-                    queroEntrar, // Mostrar apenas quando queroEntrar for verdadeiro (login)
+                    queroEntrar, // Mostrar apenas quando queroEntrar for verdadeiro
                 child: GestureDetector(
                   child: InkWell(
                     onTap: () {

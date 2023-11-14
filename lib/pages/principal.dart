@@ -232,7 +232,7 @@ class Principal extends StatelessWidget {
                     height: 4.0,
                     width: double.infinity,
                     color:
-                        Colors.white, // Cor da borda superior do terceiro card
+                        Colors.white, // Cor superior do terceiro card
                   ),
                   const Padding(
                     padding: EdgeInsets.only(
