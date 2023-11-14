@@ -1,9 +1,9 @@
 // ignore_for_file: sort_child_properties_last
 
 import 'package:flutter/material.dart';
-import 'package:pi/pages/link.dart';
-import 'package:pi/pages/principal.dart';
-import 'package:pi/pages/recuperar.dart';
+import 'package:pi/pages/Link.dart';
+import 'package:pi/pages/Principal.dart';
+import 'package:pi/pages/Recuperar.dart';
 //import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
@@ -177,7 +177,7 @@ class _LoginPageState extends State<LoginPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => recuperar(),
+                          builder: (context) => Recuperar(),
                         ),
                       );
                       // Coloque a lógica que deseja executar quando o botão é pressionado aqui.
@@ -208,7 +208,7 @@ class _LoginPageState extends State<LoginPage> {
                 if (queroEntrar) {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => principal()),
+                    MaterialPageRoute(builder: (context) => Principal()),
                   );
                   // Lógica de login
                 } else {

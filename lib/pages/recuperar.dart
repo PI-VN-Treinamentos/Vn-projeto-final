@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pi/pages/link.dart';
-import 'package:pi/pages/login.dart';
+import 'package:pi/pages/Link.dart';
+import 'package:pi/pages/Login.dart';
 
-class recuperar extends StatelessWidget {
+class Recuperar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +97,7 @@ class recuperar extends StatelessWidget {
                 Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => link(),
+                          builder: (context) => Link(),
                         ));
                 // Coloque a lógica de navegação para outra página aqui.
               },
