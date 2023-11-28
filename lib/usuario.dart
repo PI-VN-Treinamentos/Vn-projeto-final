@@ -1,26 +1,14 @@
 class Usuario {
-  String _nome;
   String _email;
   String _senha;
 
-  Usuario(this._nome, this._email, this._senha);
+  Usuario(this._email, this._senha);
 
-  // Getters
-  String get nome => _nome;
+  // Métodos getter e setter para o email
   String get email => _email;
+  set email(String value) => _email = value;
+
+  // Métodos getter e setter para a senha
   String get senha => _senha;
-
-  // Setters
-  set nome(String nome) {
-    _nome = nome;
-  }
-
-  set email(String email) {
-    _email = email;
-    
-  }
-
-  set senha(String senha) {
-    _senha = senha;
-  }
+  set senha(String value) => _senha = value;
 }

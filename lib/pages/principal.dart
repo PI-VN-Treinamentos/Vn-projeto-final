@@ -4,13 +4,16 @@ import 'package:pi/pages/Login.dart';
 import 'package:flutter/gestures.dart';
 
 class Principal extends StatelessWidget {
+  final String nomeUsuario; 
+  const Principal({Key? key, required this.nomeUsuario}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "OLÁ, NOVO USUÁRIO",
-          style: TextStyle(
+        title: Text(
+          "Olá, $nomeUsuario",
+          style: const TextStyle(
             fontFamily: 'Lexend',
             fontSize: 30,
           ),
@@ -147,7 +150,6 @@ class Principal extends StatelessWidget {
             // Segundo Card
             GestureDetector(
               onTap: () {
-                
                 // Adicione a ação desejada para o segundo Card
                 print("Segundo Card clicado!");
               },
@@ -213,55 +215,54 @@ class Principal extends StatelessWidget {
             // Terceiro Card (sem alterações)
             GestureDetector(
               onTap: () {
-    // Adicione a ação desejada para o segundo Card
-    print("Terceiro Card clicado!");
-  },
-           child: Card(
-              margin: const EdgeInsets.all(16.0),
-              color: Color.fromARGB(22, 255, 255, 255),
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(20.0),
-                  bottomRight: Radius.circular(20.0),
-                ),
-              ), // Cor de fundo do terceiro card
-
-              child: Column(
-                children: [
-                  Container(
-                    height: 4.0,
-                    width: double.infinity,
-                    color:
-                        Colors.white, // Cor superior do terceiro card
+                // Adicione a ação desejada para o segundo Card
+                print("Terceiro Card clicado!");
+              },
+              child: Card(
+                margin: const EdgeInsets.all(16.0),
+                color: Color.fromARGB(22, 255, 255, 255),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(20.0),
+                    bottomRight: Radius.circular(20.0),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(
-                      top: 60,
-                      bottom: 60,
-                      left: 50,
-                      right: 50,
+                ), // Cor de fundo do terceiro card
+
+                child: Column(
+                  children: [
+                    Container(
+                      height: 4.0,
+                      width: double.infinity,
+                      color: Colors.white, // Cor superior do terceiro card
                     ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Mudar tema, adicionar foto de perfil, consultar versão, etc.',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontFamily: 'Lexend',
-                                fontSize: 18.0,
-                                color: Colors.white),
+                    const Padding(
+                      padding: EdgeInsets.only(
+                        top: 60,
+                        bottom: 60,
+                        left: 50,
+                        right: 50,
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Mudar tema, adicionar foto de perfil, consultar versão, etc.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontFamily: 'Lexend',
+                                  fontSize: 18.0,
+                                  color: Colors.white),
+                            ),
                           ),
-                        ),
 
-                        // Adicione outros widgets aqui conforme necessário
-                      ],
+                          // Adicione outros widgets aqui conforme necessário
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
             )
           ],
         ),

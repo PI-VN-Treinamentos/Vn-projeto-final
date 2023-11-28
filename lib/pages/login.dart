@@ -1,10 +1,9 @@
-// ignore_for_file: sort_child_properties_last
-
+import 'package:pi/Aluno.dart';
+import 'package:pi/Usuario.dart';
 import 'package:flutter/material.dart';
-import 'package:pi/pages/Link.dart';
 import 'package:pi/pages/Principal.dart';
 import 'package:pi/pages/Recuperar.dart';
-//import 'package:http/http.dart' as http;
+
 
 class LoginPage extends StatefulWidget {
   @override
@@ -12,30 +11,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController senhaController = TextEditingController();
   TextEditingController nomeController = TextEditingController();
+  TextEditingController confirmarSenhaController = TextEditingController();
 
   bool queroEntrar = true;
-
-  /*Future<void> cadastrarUsuario() async {
-    final response = await http.post(
-      Uri.parse('http://seu-backend.com/cadastrar-usuario/'),
-      body: {
-        'nome': nomeController.text,
-        'email': emailController.text,
-        'senha': senhaController.text,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      // Usuário cadastrado com sucesso
-      print('Usuário cadastrado com sucesso');
-    } else {
-      // Erro no cadastro
-      print('Erro ao cadastrar usuário');
-    }
-  } */
 
   @override
   Widget build(BuildContext context) {
@@ -47,23 +29,38 @@ class _LoginPageState extends State<LoginPage> {
           right: 40,
         ),
         color: const Color.fromARGB(255, 36, 36, 36),
-        child: ListView(
-          children: <Widget>[
-            SizedBox(
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: <Widget>[
+              SizedBox(
                 width: 50,
                 height: 250,
-                child: Image.asset('assets/LogoBranco.png')),
-            const SizedBox(
-              height: 60,
-            ),
-            TextSelectionTheme(
-              data: const TextSelectionThemeData(
-                cursorColor: Colors.white,
-                selectionColor: Colors.blue,
+                child: Image.asset('assets/LogoBranco.png'),
               ),
-              child: TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
+              const SizedBox(
+                height: 60,
+              ),
+              TextSelectionTheme(
+                data: const TextSelectionThemeData(
+                  cursorColor: Colors.white,
+                  selectionColor: Colors.blue,
+                ),
+                child: TextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (String? value) {
+                    if (value == null) {
+                      return "O e-mail não pode ser vazio";
+                    }
+                    if (value.length < 5) {
+                      return "O e-mail é muito curto";
+                    }
+                    if (!value.contains("@")) {
+                      return "O e-mail não é válido";
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
                     labelText: "Email",
                     labelStyle: TextStyle(
                       color: Color.fromARGB(255, 90, 90, 90),
@@ -75,212 +72,245 @@ class _LoginPageState extends State<LoginPage> {
                       borderSide: BorderSide(
                         color: Colors.white,
                       ),
-                    )),
-                style: const TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            TextSelectionTheme(
-              data: const TextSelectionThemeData(
-                cursorColor: Colors.white,
-                selectionColor: Colors.blue,
-              ),
-              child: TextFormField(
-                keyboardType: TextInputType.text,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: "Senha",
-                  labelStyle: TextStyle(
-                    color: Color.fromARGB(255, 90, 90, 90),
-                    fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  style: const TextStyle(
                     fontSize: 20,
-                    fontFamily: 'Lexend',
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.white,
-                    ),
+                    color: Colors.white,
                   ),
                 ),
-                style: const TextStyle(fontSize: 20, color: Colors.white),
               ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            TextSelectionTheme(
-              data: const TextSelectionThemeData(
-                cursorColor: Colors.white,
-                selectionColor: Colors.blue,
+              const SizedBox(
+                height: 30,
               ),
-              child: Visibility(
-                visible: !queroEntrar,
-                child: Column(
-                  children: [
-                    TextFormField(
-                      keyboardType: TextInputType.text,
-                      obscureText: true,
-                      decoration: const InputDecoration(
-                        labelText: "Confirme Senha",
-                        labelStyle: TextStyle(
-                          color: Color.fromARGB(255, 90, 90, 90),
-                          fontWeight: FontWeight.w400,
-                          fontSize: 20,
-                          fontFamily: 'Lexend',
+              TextSelectionTheme(
+                data: const TextSelectionThemeData(
+                  cursorColor: Colors.white,
+                  selectionColor: Colors.blue,
+                ),
+                child: TextFormField(
+                  keyboardType: TextInputType.text,
+                  obscureText: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty || value.length < 6) {
+                      return 'Senha inválida. Deve ter pelo menos 6 caracteres';
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    labelText: "Senha",
+                    labelStyle: TextStyle(
+                      color: Color.fromARGB(255, 90, 90, 90),
+                      fontWeight: FontWeight.w400,
+                      fontSize: 20,
+                      fontFamily: 'Lexend',
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                ),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              TextSelectionTheme(
+                data: const TextSelectionThemeData(
+                  cursorColor: Colors.white,
+                  selectionColor: Colors.blue,
+                ),
+                child: Visibility(
+                  visible: !queroEntrar,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        keyboardType: TextInputType.text,
+                        obscureText: true,
+                        controller: confirmarSenhaController,
+                        validator: (value) {
+                            if (value == null || value.isEmpty || value.length < 6) {
+                              return 'Senha inválida. Deve ter pelo menos 6 caracteres';
+                            }
+                            return null;
+                          },
+                        decoration: const InputDecoration(
+                          labelText: "Confirme Senha",
+                          labelStyle: TextStyle(
+                            color: Color.fromARGB(255, 90, 90, 90),
+                            fontWeight: FontWeight.w400,
+                            fontSize: 20,
+                            fontFamily: 'Lexend',
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
+                        style:
+                            const TextStyle(fontSize: 20, color: Colors.white),
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      TextFormField(
+                        controller: nomeController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor, insira seu nome';
+                          }
+                          return null;
+                        },
+                        decoration: const InputDecoration(
+                          label: Text("Nome"),
+                          labelStyle: TextStyle(
+                            color: Color.fromARGB(255, 90, 90, 90),
+                            fontWeight: FontWeight.w400,
+                            fontSize: 20,
+                            fontFamily: 'Lexend',
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                height: 40,
+                alignment: Alignment.centerRight,
+                child: Visibility(
+                  visible: queroEntrar,
+                  child: GestureDetector(
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Recuperar(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        child: const Text(
+                          "Esqueceu a senha?",
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
                             color: Colors.white,
+                            decoration: TextDecoration.underline,
+                            fontFamily: 'Lexend',
                           ),
                         ),
                       ),
-                      style: const TextStyle(fontSize: 20, color: Colors.white),
                     ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        label: Text("Nome"),
-                        labelStyle: TextStyle(
-                          color: Color.fromARGB(255, 90, 90, 90),
-                          fontWeight: FontWeight.w400,
-                          fontSize: 20,
-                          fontFamily: 'Lexend',
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-            Container(
-              height: 40,
-              alignment: Alignment.centerRight,
-              child: Visibility(
-                visible:
-                    queroEntrar, // Mostrar apenas quando queroEntrar for verdadeiro
+              const SizedBox(
+                height: 60,
+              ),
+              InkWell(
+                onTap: () {
+                  botaoPrincipalClicado();
+                },
+                child: Container(
+                  width: 100,
+                  height: 60,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      stops: [0.3, 1],
+                      colors: [
+                        Color.fromARGB(255, 255, 255, 255),
+                        Color.fromARGB(255, 173, 173, 173),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(59)),
+                  ),
+                  child: Text(
+                    queroEntrar ? "Entrar" : "Cadastrar",
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 0, 0, 0),
+                      fontSize: 25,
+                      fontFamily: 'Lexend',
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                height: 40,
+                alignment: Alignment.center,
                 child: GestureDetector(
                   child: InkWell(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Recuperar(),
-                        ),
-                      );
-                      // Coloque a lógica que deseja executar quando o botão é pressionado aqui.
+                      setState(() {
+                        queroEntrar = !queroEntrar;
+                      });
                     },
                     child: Container(
                       padding: const EdgeInsets.all(8.0),
-                      child: const Text(
-                        "Esqueceu a senha?",
-                        textAlign: TextAlign.right,
+                      child: Text(
+                        (queroEntrar)
+                            ? "Ainda não tem conta? Cadastre-se!"
+                            : "Já tem conta? Entre!",
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,
-                          decoration: TextDecoration.underline,
+                          decoration: TextDecoration.none,
                           fontFamily: 'Lexend',
+                          fontSize: 24,
                         ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-
-            const SizedBox(
-              height: 60,
-            ),
-
-            InkWell(
-              onTap: () async {
-                if (queroEntrar) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Principal()),
-                  );
-                  // Lógica de login
-                } else {
-                  // Lógica de cadastro
-                  //await cadastrarUsuario();
-                  // Alterar para "entrar" após cadastrar
-                  setState(() {
-                    queroEntrar = true;
-                  });
-                }
-              },
-              child: Container(
-                width: 100,
-                height: 60,
-                alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    stops: [0.3, 1],
-                    colors: [
-                      Color.fromARGB(255, 255, 255, 255),
-                      Color.fromARGB(255, 173, 173, 173),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.all(Radius.circular(59)),
-                ),
-                child: Text(
-                  queroEntrar ? "Entrar" : "Cadastrar",
-                  style: const TextStyle(
-                    color: Color.fromARGB(255, 0, 0, 0),
-                    fontSize: 25,
-                    fontFamily: 'Lexend',
-                  ),
-                ),
-              ),
-            ),
-
-            // O restante do seu código...
-            Container(
-              height: 40,
-              alignment: Alignment.center,
-              child: GestureDetector(
-                child: InkWell(
-                  onTap: () {
-                    // Mostrar o texto apenas se queroEntrar for verdadeiro (login)
-
-                    setState(() {
-                      queroEntrar = !queroEntrar;
-                    });
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      (queroEntrar)
-                          ? "Ainda não tem conta? Cadastre-se!"
-                          : "Já tem conta? Entre!",
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        decoration: TextDecoration.none,
-                        fontFamily: 'Lexend',
-                        fontSize: 24,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  void botaoPrincipalClicado() {
+    if (_formKey.currentState!.validate()) {
+      // Lógica para o botão principal clicado
+      if (queroEntrar) {
+        // Lógica de login
+        // Crie uma instância de Usuario com os dados do formulário
+        Usuario usuario = Usuario(emailController.text, senhaController.text);
+
+        // Faça o que for necessário com a instância de Usuario
+        print('Usuário: ${usuario.email}, Senha: ${usuario.senha}');
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Principal(nomeUsuario: nomeController.text),
+        ));
+      } else {
+        // Lógica de cadastro
+        // Crie uma instância de Aluno com os dados do formulário
+        Aluno aluno = Aluno(emailController.text, senhaController.text, nomeController.text);
+
+        // Faça o que for necessário com a instância de Aluno
+        print('Aluno: ${aluno.email}, Senha: ${aluno.senha}, Nome: ${aluno.nome}');
+
+        // Alterar para "entrar" após cadastrar
+        setState(() {
+          queroEntrar = true;
+        });
+      }
+    }
   }
 }
