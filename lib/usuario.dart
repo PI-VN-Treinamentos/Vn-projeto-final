@@ -11,4 +11,12 @@ class Usuario {
   // Métodos getter e setter para a senha
   String get senha => _senha;
   set senha(String value) => _senha = value;
+
+  // Método para converter dados para um mapa
+  Map<String, dynamic> toMap() {
+    return {
+      'email': _email,
+      'senha': _senha,
+    };
+  }
 }

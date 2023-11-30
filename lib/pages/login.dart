@@ -3,7 +3,8 @@ import 'package:pi/Usuario.dart';
 import 'package:flutter/material.dart';
 import 'package:pi/pages/Principal.dart';
 import 'package:pi/pages/Recuperar.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -131,11 +132,13 @@ class _LoginPageState extends State<LoginPage> {
                         obscureText: true,
                         controller: confirmarSenhaController,
                         validator: (value) {
-                            if (value == null || value.isEmpty || value.length < 6) {
-                              return 'Senha inválida. Deve ter pelo menos 6 caracteres';
-                            }
-                            return null;
-                          },
+                          if (value == null ||
+                              value.isEmpty ||
+                              value.length < 6) {
+                            return 'Senha inválida. Deve ter pelo menos 6 caracteres';
+                          }
+                          return null;
+                        },
                         decoration: const InputDecoration(
                           labelText: "Confirme Senha",
                           labelStyle: TextStyle(
@@ -294,17 +297,27 @@ class _LoginPageState extends State<LoginPage> {
         // Faça o que for necessário com a instância de Usuario
         print('Usuário: ${usuario.email}, Senha: ${usuario.senha}');
 
+        // Envie os dados para o servidor Django
+        enviarDadosParaServidor(usuario);
+
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Principal(nomeUsuario: nomeController.text),
-        ));
+          MaterialPageRoute(
+              builder: (context) =>
+                  Principal(nomeUsuario: nomeController.text)),
+        );
       } else {
         // Lógica de cadastro
         // Crie uma instância de Aluno com os dados do formulário
-        Aluno aluno = Aluno(emailController.text, senhaController.text, nomeController.text);
+        Aluno aluno = Aluno(
+            emailController.text, senhaController.text, nomeController.text);
 
         // Faça o que for necessário com a instância de Aluno
-        print('Aluno: ${aluno.email}, Senha: ${aluno.senha}, Nome: ${aluno.nome}');
+        print(
+            'Aluno: ${aluno.email}, Senha: ${aluno.senha}, Nome: ${aluno.nome}');
+
+        // Envie os dados para o servidor Django
+        enviarDadosParaServidor(aluno);
 
         // Alterar para "entrar" após cadastrar
         setState(() {
@@ -313,4 +326,27 @@ class _LoginPageState extends State<LoginPage> {
       }
     }
   }
+
+  void enviarDadosParaServidor(dynamic dados) async {
+  final String url = 'postgres://avnadmin:AVNS_7aqUmCwZm2OXLYaIWzR@pg-8f2db6b-aula.a.aivencloud.com:14375/defaultdb?sslmode=require';
+
+  try {
+    final response = await http.post(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(dados.toMap()), // Converta para Map antes de codificar em JSON
+    );
+
+    if (response.statusCode == 200) {
+      print('Dados enviados com sucesso');
+    } else {
+      print('Erro ao enviar dados. Código de status: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Erro de conexão: $e');
+  }
+}
+
 }
