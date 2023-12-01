@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:pi/QrcodeScan.dart';
 import 'package:pi/pages/Login.dart';
 import 'package:flutter/gestures.dart';
+import 'package:pi/servicos/autenticacao_servico.dart';
 
 class Principal extends StatelessWidget {
-  final String nomeUsuario; 
+  final String nomeUsuario;
   const Principal({Key? key, required this.nomeUsuario}) : super(key: key);
 
   @override
@@ -292,10 +293,7 @@ class Principal extends StatelessWidget {
               child: IconButton(
                 icon: Icon(Icons.exit_to_app_rounded, color: Colors.white),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
-                  );
+                  AutenticacaoServico().deslogar();
                   // Adicione a ação desejada para o ícone de sair
                 },
               ),

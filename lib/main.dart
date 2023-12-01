@@ -1,17 +1,27 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pi/pages/Login.dart';
 import 'package:pi/Usuario.dart';
+import 'package:pi/Aluno.dart';
 import 'dart:ui';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:pi/pages/Principal.dart';
+import 'firebase_options.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  // Inicializa o Firebase
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Venelli treinamentos',
+      title: 'Venelli Treinamentos',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: const MaterialColor(0xFF242424, <int, Color>{
@@ -27,7 +37,27 @@ class MyApp extends StatelessWidget {
           900: Color(0xFF242424),
         }),
       ),
-      home: LoginPage(),
+      home: RoteadorTela(),
+    );
+  }
+}
+
+class RoteadorTela extends StatelessWidget {
+  const RoteadorTela({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.userChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          String nomeUsuario = snapshot.data?.displayName ?? "";
+          return Principal(
+            nomeUsuario: nomeUsuario);
+        } else {
+          return LoginPage();
+        }
+      },
     );
   }
 }

@@ -1,10 +1,13 @@
 import 'package:pi/Aluno.dart';
 import 'package:pi/Usuario.dart';
 import 'package:flutter/material.dart';
+import 'package:pi/core/meu_snackbar.dart';
 import 'package:pi/pages/Principal.dart';
 import 'package:pi/pages/Recuperar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'package:pi/servicos/autenticacao_servico.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -13,12 +16,13 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController senhaController = TextEditingController();
-  TextEditingController nomeController = TextEditingController();
-  TextEditingController confirmarSenhaController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _senhaController = TextEditingController();
+  TextEditingController _nomeController = TextEditingController();
+  TextEditingController _confirmarSenhaController = TextEditingController();
 
   bool queroEntrar = true;
+  AutenticacaoServico _autenServico = AutenticacaoServico();
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +52,7 @@ class _LoginPageState extends State<LoginPage> {
                   selectionColor: Colors.blue,
                 ),
                 child: TextFormField(
+                  controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   validator: (String? value) {
                     if (value == null) {
@@ -90,6 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                   selectionColor: Colors.blue,
                 ),
                 child: TextFormField(
+                  controller: _senhaController,
                   keyboardType: TextInputType.text,
                   obscureText: true,
                   validator: (value) {
@@ -130,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
                       TextFormField(
                         keyboardType: TextInputType.text,
                         obscureText: true,
-                        controller: confirmarSenhaController,
+                        controller: _confirmarSenhaController,
                         validator: (value) {
                           if (value == null ||
                               value.isEmpty ||
@@ -160,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                         height: 30,
                       ),
                       TextFormField(
-                        controller: nomeController,
+                        controller: _nomeController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Por favor, insira seu nome';
@@ -287,66 +293,35 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void botaoPrincipalClicado() {
+    String nome = _nomeController.text;
+    String email = _emailController.text;
+    String senha = _senhaController.text;
     if (_formKey.currentState!.validate()) {
       // Lógica para o botão principal clicado
       if (queroEntrar) {
-        // Lógica de login
-        // Crie uma instância de Usuario com os dados do formulário
-        Usuario usuario = Usuario(emailController.text, senhaController.text);
-
-        // Faça o que for necessário com a instância de Usuario
-        print('Usuário: ${usuario.email}, Senha: ${usuario.senha}');
-
-        // Envie os dados para o servidor Django
-        enviarDadosParaServidor(usuario);
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  Principal(nomeUsuario: nomeController.text)),
-        );
-      } else {
-        // Lógica de cadastro
-        // Crie uma instância de Aluno com os dados do formulário
-        Aluno aluno = Aluno(
-            emailController.text, senhaController.text, nomeController.text);
-
-        // Faça o que for necessário com a instância de Aluno
-        print(
-            'Aluno: ${aluno.email}, Senha: ${aluno.senha}, Nome: ${aluno.nome}');
-
-        // Envie os dados para o servidor Django
-        enviarDadosParaServidor(aluno);
-
-        // Alterar para "entrar" após cadastrar
-        setState(() {
-          queroEntrar = true;
+        print("Entrada Validada");
+        _autenServico
+            .logarUsuarios(email: email, senha: senha)
+            .then((String? erro) {
+          if (erro != null) {
+            mostrarSnackBar(context: context, texto: erro);
+          }
         });
+      } else {
+        print("Cadastro Validado");
+        print(
+            "${_emailController.text},${_senhaController.text},${_nomeController.text}");
+        _autenServico
+            .cadastrarUsuario(nome: nome, email: email, senha: senha)
+            .then(
+          (String? erro) {
+            if (erro != null) {
+              //voltou com erro
+              mostrarSnackBar(context: context, texto: erro);
+            } 
+          },
+        );
       }
     }
   }
-
-  void enviarDadosParaServidor(dynamic dados) async {
-  final String url = 'postgres://avnadmin:AVNS_7aqUmCwZm2OXLYaIWzR@pg-8f2db6b-aula.a.aivencloud.com:14375/defaultdb?sslmode=require';
-
-  try {
-    final response = await http.post(
-      Uri.parse(url),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(dados.toMap()), // Converta para Map antes de codificar em JSON
-    );
-
-    if (response.statusCode == 200) {
-      print('Dados enviados com sucesso');
-    } else {
-      print('Erro ao enviar dados. Código de status: ${response.statusCode}');
-    }
-  } catch (e) {
-    print('Erro de conexão: $e');
-  }
-}
-
 }
