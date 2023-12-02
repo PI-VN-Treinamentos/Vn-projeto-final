@@ -41,6 +41,8 @@ dependencies:
   url_launcher: ^6.0.10
   http: ^0.13.3
   firebase_auth: ^4.15.0
+  cloud_firestore: ^4.13.3
+  random_string: ^2.2.0
 
 dev_dependencies:
   flutter_test:

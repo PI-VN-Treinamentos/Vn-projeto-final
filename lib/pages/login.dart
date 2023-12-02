@@ -2,9 +2,11 @@ import 'package:pi/Aluno.dart';
 import 'package:pi/Usuario.dart';
 import 'package:flutter/material.dart';
 import 'package:pi/core/meu_snackbar.dart';
+import 'package:pi/pages/Link.dart';
 import 'package:pi/pages/Principal.dart';
 import 'package:pi/pages/Recuperar.dart';
 import 'package:http/http.dart' as http;
+import 'package:pi/pages/TelaProfessor.dart';
 import 'dart:convert';
 
 import 'package:pi/servicos/autenticacao_servico.dart';
@@ -293,11 +295,21 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void botaoPrincipalClicado() {
-    String nome = _nomeController.text;
-    String email = _emailController.text;
-    String senha = _senhaController.text;
-    if (_formKey.currentState!.validate()) {
-      // Lógica para o botão principal clicado
+  String nome = _nomeController.text;
+  String email = _emailController.text;
+  String senha = _senhaController.text;
+
+  if (_formKey.currentState!.validate()) {
+    // Verificação se é admin
+    if (queroEntrar && email == 'venelli@admin.com' && senha == 'adminvn') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TelaProfessor(),
+        ),
+      );
+    } else {
+      // Se não for admin, realizar o login ou cadastro normalmente
       if (queroEntrar) {
         print("Entrada Validada");
         _autenServico
@@ -316,12 +328,13 @@ class _LoginPageState extends State<LoginPage> {
             .then(
           (String? erro) {
             if (erro != null) {
-              //voltou com erro
               mostrarSnackBar(context: context, texto: erro);
-            } 
+            }
           },
         );
       }
     }
   }
+}
+
 }

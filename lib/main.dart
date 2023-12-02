@@ -1,11 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pi/pages/Codigo.dart';
+import 'package:pi/pages/CriarVotacao.dart';
 import 'package:pi/pages/Login.dart';
 import 'package:pi/Usuario.dart';
 import 'package:pi/Aluno.dart';
 import 'dart:ui';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:pi/pages/Principal.dart';
+import 'package:pi/pages/TelaProfessor.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -37,7 +40,7 @@ class MyApp extends StatelessWidget {
           900: Color(0xFF242424),
         }),
       ),
-      home: RoteadorTela(),
+      home: LoginPage(),
     );
   }
 }
