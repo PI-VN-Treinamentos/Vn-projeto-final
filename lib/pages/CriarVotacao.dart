@@ -18,6 +18,7 @@ class CriarVotacao extends StatefulWidget {
 class _CriarVotacaoState extends State<CriarVotacao> {
   int numeroGrupos = 0;
   List<Grupo> grupos = [];
+  
   TextEditingController _nomeSessaoController = TextEditingController();
   TextEditingController _nomeInstituicaoController = TextEditingController();
   TextEditingController _perguntaController = TextEditingController();

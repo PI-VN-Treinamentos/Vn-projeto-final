@@ -27,35 +27,44 @@ class AlunoCodigo extends StatelessWidget {
     }
   }
 
-  Future<List<Grupo>> _recuperarGruposDoFirestore(String codigoVotacao) async {
+ Future<List<Grupo>> _recuperarGruposDoFirestore(String codigoVotacao) async {
   try {
-    QuerySnapshot gruposSnapshot = await FirebaseFirestore.instance
+    // Faça uma consulta para obter o documento correspondente ao código de votação
+    DocumentSnapshot votacaoSnapshot = await FirebaseFirestore.instance
         .collection('votacoes')
         .where('codigoVotacao', isEqualTo: codigoVotacao)
-        .get();
+        .get()
+        .then((value) => value.docs.first);
 
-    if (gruposSnapshot.docs.isNotEmpty) {
-      // Acesse o primeiro documento da consulta
-      var primeiroDocumento = gruposSnapshot.docs.first;
+    // Verifique se o documento da votação existe
+    if (votacaoSnapshot.exists) {
+      // Recupere a referência para a subcoleção 'grupos' dentro do documento da votação
+      CollectionReference gruposCollectionRef =
+          votacaoSnapshot.reference.collection('grupos');
 
-      // Recupere a coleção 'grupos' dentro do documento
-      var gruposCollection = primeiroDocumento.reference.collection('grupos');
+      // Faça uma consulta para obter todos os documentos da subcoleção 'grupos'
+      QuerySnapshot gruposSnapshot = await gruposCollectionRef.get();
 
-      // Recupere os documentos da coleção 'grupos'
-      QuerySnapshot gruposDocs = await gruposCollection.get();
+      // Inicialize uma lista para armazenar os grupos
+      List<Grupo> grupos = [];
 
-      // Mapeie os documentos para a lista de Grupos
-      return gruposDocs.docs
-          .map((grupoDoc) => Grupo.fromMap(grupoDoc.data() as Map<String, dynamic>))
-          .toList();
+      // Itere sobre os documentos e converta cada um para um objeto Grupo
+      for (QueryDocumentSnapshot grupoDoc in gruposSnapshot.docs) {
+        Grupo grupo = Grupo.fromMap(grupoDoc.data() as Map<String, dynamic>);
+        grupos.add(grupo);
+      }
+
+      return grupos;
     } else {
-      throw Exception("Nenhum grupo encontrado para o código de votação: $codigoVotacao");
+      throw Exception("Documento de votação não encontrado para o código $codigoVotacao");
     }
   } catch (e) {
     print("Erro ao recuperar grupos do Firestore: $e");
     throw Exception("Erro ao recuperar grupos do Firestore");
   }
 }
+
+
 
 
 
