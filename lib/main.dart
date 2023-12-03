@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pi/pages/AlunoCodigo.dart';
 import 'package:pi/pages/Codigo.dart';
 import 'package:pi/pages/CriarVotacao.dart';
+import 'package:pi/pages/Escolha.dart';
 import 'package:pi/pages/Login.dart';
 import 'package:pi/Usuario.dart';
 import 'package:pi/Aluno.dart';

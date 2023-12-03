@@ -6,6 +6,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pi/DBFirestore.dart';
 import 'package:pi/pages/Codigo.dart';
 import 'package:random_string/random_string.dart';
+import 'package:pi/pages/AlunoCodigo.dart';
+import 'package:pi/pages/GeradorCodigoVotacao.dart';
+import 'package:pi/pages/VotacaoInfo.dart';
 
 class CriarVotacao extends StatefulWidget {
   @override
@@ -14,7 +17,7 @@ class CriarVotacao extends StatefulWidget {
 
 class _CriarVotacaoState extends State<CriarVotacao> {
   int numeroGrupos = 0;
-  List<Grupos> grupos = [];
+  List<Grupo> grupos = [];
   TextEditingController _nomeSessaoController = TextEditingController();
   TextEditingController _nomeInstituicaoController = TextEditingController();
   TextEditingController _perguntaController = TextEditingController();
@@ -245,7 +248,7 @@ class _CriarVotacaoState extends State<CriarVotacao> {
                                 numeroGrupos++;
                                 // Adiciona um novo grupo à lista de grupos
                                 grupos.add(
-                                  Grupos(
+                                  Grupo(
                                     "Grupo $numeroGrupos",
                                     List<
                                         Aluno>.empty(), // Começa com uma lista vazia de alunos
@@ -364,9 +367,11 @@ class _CriarVotacaoState extends State<CriarVotacao> {
 
     FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-    try {
-      String codigoVotacao = randomAlphaNumeric(6);
+     try {
+      String codigoVotacao = await GeradorCodigoVotacao.gerarEArmazenarCodigo();
+      VotacaoInfo.codigoVotacao = codigoVotacao;
 
+      // Criação da votação sem a inclusão direta de grupos
       DocumentReference novaVotacao =
           await _firestore.collection('votacoes').add({
         'nomeSessao': nomeSessao,
@@ -376,9 +381,10 @@ class _CriarVotacaoState extends State<CriarVotacao> {
         'timestamp': FieldValue.serverTimestamp(),
       });
 
+      // Adiciona a referência da votação criada à coleção de grupos
       for (int i = 0; i < grupos.length; i++) {
-        await novaVotacao.collection('grupos').add(grupos[i].toMap());
-      }
+      await novaVotacao.collection('grupos').add(grupos[i].toMap());
+  }
 
       print("Votação criada com sucesso!");
 
@@ -397,3 +403,5 @@ class _CriarVotacaoState extends State<CriarVotacao> {
     }
   }
 }
+
+    

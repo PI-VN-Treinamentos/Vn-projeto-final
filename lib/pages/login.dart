@@ -2,6 +2,8 @@ import 'package:pi/Aluno.dart';
 import 'package:pi/Usuario.dart';
 import 'package:flutter/material.dart';
 import 'package:pi/core/meu_snackbar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:pi/DBFirestore.dart';
 import 'package:pi/pages/Link.dart';
 import 'package:pi/pages/Principal.dart';
 import 'package:pi/pages/Recuperar.dart';
@@ -295,46 +297,55 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void botaoPrincipalClicado() {
-  String nome = _nomeController.text;
-  String email = _emailController.text;
-  String senha = _senhaController.text;
+    String nome = _nomeController.text;
+    String email = _emailController.text;
+    String senha = _senhaController.text;
 
-  if (_formKey.currentState!.validate()) {
-    // Verificação se é admin
-    if (queroEntrar && email == 'venelli@admin.com' && senha == 'adminvn') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => TelaProfessor(),
-        ),
-      );
-    } else {
-      // Se não for admin, realizar o login ou cadastro normalmente
-      if (queroEntrar) {
-        print("Entrada Validada");
-        _autenServico
-            .logarUsuarios(email: email, senha: senha)
-            .then((String? erro) {
-          if (erro != null) {
-            mostrarSnackBar(context: context, texto: erro);
-          }
-        });
+    if (_formKey.currentState!.validate()) {
+      // Verificação se é admin
+      if (queroEntrar && email == 'venelli@admin.com' && senha == 'adminvn') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TelaProfessor(),
+          ),
+        );
       } else {
-        print("Cadastro Validado");
-        print(
-            "${_emailController.text},${_senhaController.text},${_nomeController.text}");
-        _autenServico
-            .cadastrarUsuario(nome: nome, email: email, senha: senha)
-            .then(
-          (String? erro) {
+        // Se não for admin, realizar o login ou cadastro normalmente
+        if (queroEntrar) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Principal(nomeUsuario: nome,),
+            ),
+          );
+          print("Entrada Validada");
+          _autenServico
+              .logarUsuarios(email: email, senha: senha)
+              .then((String? erro) {
             if (erro != null) {
               mostrarSnackBar(context: context, texto: erro);
+            } else {
+              // Aqui você pode adicionar lógica para buscar dados do Firestore após o login, se necessário
             }
-          },
-        );
+          });
+        } else {
+          print("Cadastro Validado");
+          print("$email, $senha, $nome");
+
+          // Realiza o cadastro no Firebase Authentication
+          _autenServico
+              .cadastrarUsuario(nome: nome, email: email, senha: senha)
+              .then((String? erro) {
+            if (erro != null) {
+              mostrarSnackBar(context: context, texto: erro);
+            } else {
+              // Adiciona informações do usuário ao Firestore
+              DBFirestore.adicionarAluno(Aluno(email, senha, nome));
+            }
+          });
+        }
       }
     }
   }
-}
-
 }

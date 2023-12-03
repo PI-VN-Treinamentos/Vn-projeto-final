@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pi/QrcodeScan.dart';
+import 'package:pi/pages/AlunoCodigo.dart';
 import 'package:pi/pages/Login.dart';
 import 'package:flutter/gestures.dart';
 import 'package:pi/servicos/autenticacao_servico.dart';
@@ -69,8 +70,8 @@ class Principal extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(
                       top: 60,
-                      bottom: 20,
-                      left: 50,
+                      bottom: 10,
+                      left: 20,
                       right: 50,
                     ),
                     child: Row(
@@ -112,23 +113,33 @@ class Principal extends StatelessWidget {
                           ),
                         ),
                         Column(
-                          children: [
-                            const SizedBox(
-                              height: 50,
-                            ),
-                            ElevatedButton(
-                              onPressed: null,
+                        children: [
+                          const SizedBox(
+                            height: 50,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              right: 2.0), // Ajuste o valor conforme necessário
+                            child: ElevatedButton(
+                              onPressed:  () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => AlunoCodigo()),
+                                );
+                              },
                               style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      const Color.fromARGB(255, 31, 30, 30),
-                                  foregroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                  )),
+                                backgroundColor: const Color.fromARGB(255, 31, 30, 30),
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                ),
+                              ),
                               child: const Text('Código'),
                             ),
-                          ],
-                        )
+                          ),
+                        ],
+                      )
                         // Adicione outros widgets aqui conforme necessário
                       ],
                     ),
