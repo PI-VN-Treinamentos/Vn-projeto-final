@@ -11,6 +11,7 @@ import 'dart:ui';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:pi/pages/Principal.dart';
 import 'package:pi/pages/TelaProfessor.dart';
+import 'package:pi/pages/Votacao.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
           900: Color(0xFF242424),
         }),
       ),
-      home: LoginPage(),
+      home: Escolha(nomeInstituicao: "", nomeSessao: "", grupos: [],),
     );
   }
 }

@@ -383,9 +383,16 @@ class _CriarVotacaoState extends State<CriarVotacao> {
       });
 
       // Adiciona a referência da votação criada à coleção de grupos
-      for (int i = 0; i < grupos.length; i++) {
-      await novaVotacao.collection('grupos').add(grupos[i].toMap());
-  }
+        // Adiciona a referência da votação criada à coleção de grupos
+        for (int i = 0; i < grupos.length; i++) {
+          await novaVotacao.collection('grupos').add({
+            'nomeGrupo': grupos[i].nomeGrupo, // Use o nome real do grupo aqui
+            'integrantes': grupos[i].integrantes.map((aluno) => aluno.toMap()).toList(),
+            // Adicione outros campos conforme necessário
+          });
+          }
+
+
 
       print("Votação criada com sucesso!");
 
