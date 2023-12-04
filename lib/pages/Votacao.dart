@@ -47,7 +47,7 @@ class _VotacaoScreenState extends State<Votacao> {
                 Column(
                   children: [
                     Text(
-                      'Qual grupo teve o trabalho mais criativo?',
+                      'Qual o melhor grupo ?',
                       style: TextStyle(fontSize: 20, fontFamily: 'Lexend', color: Colors.white),
                     ),
                     SizedBox(height: 20),

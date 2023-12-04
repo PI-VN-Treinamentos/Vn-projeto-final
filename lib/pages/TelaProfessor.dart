@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pi/QrcodeScan.dart';
 import 'package:pi/pages/CriarVotacao.dart';
+import 'package:pi/pages/InstituicoesAdm.dart';
 import 'package:pi/pages/Link.dart';
 import 'package:pi/pages/Login.dart';
 import 'package:flutter/gestures.dart';
@@ -183,10 +184,12 @@ class TelaProfessor extends StatelessWidget {
               ),
             ),
             // Terceiro Card (sem alterações)
-            GestureDetector(
+           GestureDetector(
               onTap: () {
-                // Adicione a ação desejada para o terceiro Card
-                print("Terceiro Card clicado!");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const InstituicaoAdm(nomeUsuario: "",)),
+                );
               },
               child: Card(
                 margin: const EdgeInsets.all(16.0),

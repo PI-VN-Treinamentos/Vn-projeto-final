@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
           900: Color(0xFF242424),
         }),
       ),
-      home: Escolha(nomeInstituicao: "", nomeSessao: "", grupos: [],),
+      home: LoginPage(),
     );
   }
 }

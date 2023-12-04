@@ -18,10 +18,25 @@ class CriarVotacao extends StatefulWidget {
 class _CriarVotacaoState extends State<CriarVotacao> {
   int numeroGrupos = 0;
   List<Grupo> grupos = [];
+  List<TextEditingController> _controllers = [];
+
+@override
+void initState() {
+  super.initState();
+
+  // Inicializar os controladores aqui usando o valor atual de numeroGrupos
+  _controllers = List.generate(
+    numeroGrupos,
+    (index) => TextEditingController(),
+  );
+}
   
   TextEditingController _nomeSessaoController = TextEditingController();
   TextEditingController _nomeInstituicaoController = TextEditingController();
   TextEditingController _perguntaController = TextEditingController();
+  TextEditingController _nomeGrupoController = TextEditingController();
+
+  List<bool> camposValidos = [true, true, true, true];
 
   @override
   Widget build(BuildContext context) {
@@ -239,25 +254,25 @@ class _CriarVotacaoState extends State<CriarVotacao> {
                       ),
                       Row(
                         children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.add,
-                              color: Colors.white,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                numeroGrupos++;
-                                // Adiciona um novo grupo à lista de grupos
-                                grupos.add(
-                                  Grupo(
-                                    "Grupo $numeroGrupos",
-                                    List<
-                                        Aluno>.empty(), // Começa com uma lista vazia de alunos
-                                  ),
-                                );
-                              });
-                            },
-                          ),
+                          
+                        IconButton(
+                        icon: const Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            numeroGrupos++;
+                            grupos.add(
+                              Grupo(
+                                "Grupo $numeroGrupos", // Nome padrão
+                                List<Aluno>.empty(),
+                              ),
+                            );
+                          });
+                        },
+                      ),
+
                           IconButton(
                             icon: const Icon(
                               Icons.remove,
@@ -279,42 +294,47 @@ class _CriarVotacaoState extends State<CriarVotacao> {
                   ),
                 ),
 
-                Container(
-                  width: 600,
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: numeroGrupos,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 8),
-                          child: TextField(
-                            decoration: InputDecoration(
-                              hintText: 'Grupo ${index + 1}',
-                              hintStyle: const TextStyle(
-                                color: Colors.grey,
-                              ),
-                              enabledBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8.0)),
-                              ),
-                              focusedBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8.0)),
-                              ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 15.0, horizontal: 15.0),
+               Container(
+                width: 600,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: numeroGrupos,
+                  itemBuilder: (context, index) {
+                    // Certifique-se de que há controladores suficientes para cada grupo
+                    while (_controllers.length <= index) {
+                      _controllers.add(TextEditingController());
+                    }
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      child: TextField(
+                        controller: _controllers[index], // Adicione esta linha
+                          decoration: InputDecoration(
+                            hintText: 'Grupo ${index + 1}', // Modifique esta linha
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
                             ),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Lexend',
-                              fontSize: 15,
+                            enabledBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                              borderRadius: BorderRadius.all(Radius.circular(8.0)),
                             ),
-                            cursorColor: Colors.white,
-                            showCursor: true,
+                            focusedBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                              borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              vertical: 15.0,
+                              horizontal: 15.0,
+                            ),
+                          ),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Lexend',
+                            fontSize: 15,
+                          ),
+                          cursorColor: Colors.white,
+                          showCursor: true,
                           ),
                         );
                       }),
@@ -326,7 +346,8 @@ class _CriarVotacaoState extends State<CriarVotacao> {
                 Container(
                   width: 600,
                   height: 60,
-                  margin: const EdgeInsets.only(top: 16),
+                  margin: const EdgeInsets.only(top: 16,
+                  bottom: 30),
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
@@ -341,7 +362,9 @@ class _CriarVotacaoState extends State<CriarVotacao> {
                   ),
                   child: TextButton(
                     onPressed: () {
-                      _criarVotacao();
+                      _validarCampos();
+                     
+                      
                     },
                     child: const Text(
                       "Criar",
@@ -362,54 +385,72 @@ class _CriarVotacaoState extends State<CriarVotacao> {
   }
 
   void _criarVotacao() async {
-    String nomeSessao = _nomeSessaoController.text;
-    String nomeInstituicao = _nomeInstituicaoController.text;
-    String pergunta = _perguntaController.text;
+  String nomeSessao = _nomeSessaoController.text;
+  String nomeInstituicao = _nomeInstituicaoController.text;
+  String pergunta = _perguntaController.text;
 
-    FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-     try {
-      String codigoVotacao = await GeradorCodigoVotacao.gerarEArmazenarCodigo();
-      VotacaoInfo.codigoVotacao = codigoVotacao;
+  try {
+    String codigoVotacao = await GeradorCodigoVotacao.gerarEArmazenarCodigo();
+    VotacaoInfo.codigoVotacao = codigoVotacao;
 
-      // Criação da votação sem a inclusão direta de grupos
-      DocumentReference novaVotacao =
-          await _firestore.collection('votacoes').add({
-        'nomeSessao': nomeSessao,
-        'nomeInstituicao': nomeInstituicao,
-        'pergunta': pergunta,
-        'codigoVotacao': codigoVotacao,
-        'timestamp': FieldValue.serverTimestamp(),
+    // Criação da votação sem a inclusão direta de grupos
+    DocumentReference novaVotacao = await _firestore.collection('votacoes').add({
+      'nomeSessao': nomeSessao,
+      'nomeInstituicao': nomeInstituicao,
+      'pergunta': pergunta,
+      'codigoVotacao': codigoVotacao,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+
+    // Adiciona a referência da votação criada à coleção de grupos
+    for (int i = 0; i < grupos.length; i++) {
+      await novaVotacao.collection('grupos').add({
+        'nomeGrupo': grupos[i].nomeGrupo,
+        'integrantes': grupos[i].integrantes.map((aluno) => aluno.toMap()).toList(),
+        // Adicione outros campos conforme necessário
       });
-
-      // Adiciona a referência da votação criada à coleção de grupos
-        // Adiciona a referência da votação criada à coleção de grupos
-        for (int i = 0; i < grupos.length; i++) {
-          await novaVotacao.collection('grupos').add({
-            'nomeGrupo': grupos[i].nomeGrupo, // Use o nome real do grupo aqui
-            'integrantes': grupos[i].integrantes.map((aluno) => aluno.toMap()).toList(),
-            // Adicione outros campos conforme necessário
-          });
-          }
-
-
-
-      print("Votação criada com sucesso!");
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Codigo(
-            nomeSessao: nomeSessao,
-            nomeInstituicao: nomeInstituicao,
-            codigoVotacao: codigoVotacao,
-          ),
-        ),
-      );
-    } catch (e) {
-      print("Erro ao criar votação: $e");
     }
+
+    print("Votação criada com sucesso!");
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Codigo(
+          nomeSessao: nomeSessao,
+          nomeInstituicao: nomeInstituicao,
+          codigoVotacao: codigoVotacao,
+        ),
+      ),
+    );
+  } catch (e) {
+    print("Erro ao criar votação: $e");
   }
+}
+  void _validarCampos() {
+  // Verifica se todos os campos obrigatórios estão preenchidos
+  bool nomeSessaoValido = _nomeSessaoController.text.isNotEmpty;
+  bool nomeInstituicaoValido = _nomeInstituicaoController.text.isNotEmpty;
+  bool perguntaValida = _perguntaController.text.isNotEmpty;
+  bool peloMenosUmGrupoAdicionado = numeroGrupos > 0;
+
+  // Se todos os campos obrigatórios estiverem preenchidos, cria a votação
+  if (nomeSessaoValido && nomeInstituicaoValido && perguntaValida && peloMenosUmGrupoAdicionado) {
+    _criarVotacao();
+  } else {
+    // Se algum campo não estiver preenchido corretamente, exibe um erro com cor vermelha
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Preencha todos os campos corretamente!"),
+        backgroundColor: Colors.red, // Cor vermelha para indicar um erro
+      ),
+    );
+  }
+}
+
+
 }
 
     

@@ -18,33 +18,47 @@ class Escolha extends StatefulWidget {
 }
 
 class _EscolhaState extends State<Escolha> {
-  // Lista para armazenar os grupos selecionados
-  List<String> gruposSelecionados = [];
+  // Armazenar o grupo atualmente selecionado
+  String? grupoSelecionado;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Escolha"),
+        title: const Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              "Escolha",
+              style: TextStyle(
+                fontFamily: 'Lexend',
+                fontSize: 25,
+              ),
+            )
+          ],
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new),
+          color: Colors.white,
+          onPressed: () => Navigator.pop(context, false),
+        ),
       ),
-      
       body: Container(
         color: const Color.fromARGB(255, 36, 36, 36),
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center, // Centraliza os filhos horizontalmente
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Exibir nome da sessão e instituição
               Padding(
-                padding: const EdgeInsets.only(top: 70,
-                ),
+                padding: const EdgeInsets.only(top: 50,
+                bottom: 5),
                 child: Text(
                   "Nome da Sessão: ${widget.nomeSessao}",
                   style: TextStyle(color: Colors.white, fontFamily: 'Lexend', fontSize: 20,),
                 ),
               ),
-              SizedBox(height: 50,),
+              SizedBox(height: 70,),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
@@ -52,9 +66,7 @@ class _EscolhaState extends State<Escolha> {
                   style: TextStyle(color: Colors.white, fontFamily: 'Lexend', fontSize: 20),
                 ),
               ),
-              SizedBox(height: 50,),
-
-              // Exibir grupos
+              SizedBox(height: 70,),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
@@ -62,83 +74,85 @@ class _EscolhaState extends State<Escolha> {
                   style: TextStyle(color: Colors.white, fontFamily: 'Lexend', fontSize: 20),
                 ),
               ),
-
-              // Lista de botões para os grupos
-              Expanded(
-                child: ListView.builder(
-                  itemCount: widget.grupos.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Adicione ou remova o grupo da lista de selecionados
-                          setState(() {
-                            if (gruposSelecionados
-                                .contains(widget.grupos[index].nomeGrupo)) {
-                              gruposSelecionados
-                                  .remove(widget.grupos[index].nomeGrupo);
-                            } else {
-                              gruposSelecionados
-                                  .add(widget.grupos[index].nomeGrupo);
-                            }
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(
-                          primary: gruposSelecionados
-                                  .contains(widget.grupos[index].nomeGrupo)
-                              ? Colors.green // Cor quando o grupo está selecionado
-                              : Colors.blue, // Cor padrão
-                        ),
-                        child: Text(
-                          widget.grupos[index].nomeGrupo,
-                          style: TextStyle(color: Colors.white, fontFamily: 'Lexend', fontSize: 20,),
+              Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                width: 400,
+                child: DropdownButton<String>(
+                  value: grupoSelecionado,
+                  onChanged: (String? novoGrupoSelecionado) {
+                    setState(() {
+                      grupoSelecionado = novoGrupoSelecionado;
+                    });
+                  },
+                  items: widget.grupos.map<DropdownMenuItem<String>>((Grupo grupo) {
+                    return DropdownMenuItem<String>(
+                      value: grupo.nomeGrupo,
+                      child: SizedBox(
+                        height: 70,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              grupo.nomeGrupo,
+                              style: TextStyle(color: Colors.white, fontFamily: 'Lexend', fontSize: 20),
+                            ),
+                            if (grupoSelecionado == null) // Verifica se o hint text está sendo exibido
+                              Icon(
+                                Icons.arrow_drop_down,
+                                color: Colors.white,
+                              ),
+                          ],
                         ),
                       ),
                     );
-                  },
+                  }).toList(),
+                  style: TextStyle(color: Colors.white, fontFamily: 'Lexend', fontSize: 20),
+                  hint: Text("Selecione um grupo"),
+                  isExpanded: false,
+                  dropdownColor: Colors.blue,
                 ),
               ),
-            Container(
-              
-                  width: 600,
-                  height: 60,
-                  margin: const EdgeInsets.only(top: 16),
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      stops: [0.3, 1],
-                      colors: [
-                        Color.fromARGB(255, 255, 255, 255),
-                        Color.fromARGB(255, 173, 173, 173),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(59)),
+            ),
+
+
+
+              Container(
+                width: 600,
+                height: 60,
+                margin: const EdgeInsets.only(top: 400,),
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    stops: [0.3, 1],
+                    colors: [
+                      Color.fromARGB(255, 255, 255, 255),
+                      Color.fromARGB(255, 173, 173, 173),
+                    ],
                   ),
-                  child: TextButton(
-                    onPressed: () {
+                  borderRadius: BorderRadius.all(Radius.circular(59)),
+                ),
+                child: TextButton(
+                  onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => Votacao(),
                       ),
                     );
-
-                    print("Grupos Selecionados: $gruposSelecionados");
+                    print("Grupo Selecionado: $grupoSelecionado");
                   },
-                    child: const Text(
-                      "Avançar",
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 0, 0, 0),
-                        fontSize: 25,
-                        fontFamily: 'Lexend',
-                      ),
+                  child: const Text(
+                    "Avançar",
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 0, 0, 0),
+                      fontSize: 25,
+                      fontFamily: 'Lexend',
                     ),
                   ),
                 ),
-
-
+              ),
             ],
           ),
         ),
