@@ -1,16 +1,28 @@
-# pi
+# Venelli Treinamentos
 
-A new Flutter project.
+Este é um aplicativo de votação desenvolvido em Flutter, que utiliza o Firebase como banco de dados em tempo real. O aplicativo destina-se a professores que desejam criar votações para suas aulas e alunos que desejam participar dessas votações.
 
-## Getting Started
+## Funcionalidades Principais:
 
-This project is a starting point for a Flutter application.
+Criação de Sessões:
+Os professores podem criar sessões de votação, fornecendo informações como nome da sessão, instituição acadêmica e código de acesso exclusivo.
 
-A few resources to get you started if this is your first Flutter project:
+Gerenciamento de Grupos:
+Adição e organização de grupos de alunos para uma melhor segmentação e acompanhamento das votações.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Definição de Perguntas:
+Inclusão de perguntas específicas para cada sessão de votação, permitindo uma personalização completa do conteúdo a ser avaliado.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Para Alunos:
+Participação em Votações:
+Os alunos podem participar das votações inserindo o código fornecido pelo professor para acessar a sessão específica.
+
+Escolha de Grupos:
+Seleção do grupo ao qual pertencem, garantindo que as votações sejam precisas e alinhadas com a composição da sala de aula.
+
+Tecnologias Utilizadas:
+Flutter:
+Framework de desenvolvimento multiplataforma para criar interfaces de usuário nativas.
+
+Firebase (Firestore):
+Banco de dados em tempo real para armazenar e sincronizar dados entre os dispositivos.
